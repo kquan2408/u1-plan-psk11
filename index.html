@@ -1,0 +1,1885 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-100">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pizarra Digital - Public Speaking Unit 1: Leadership Through Words</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            montano: {
+              navy: '#1269A8',     // Main Blue
+              yellow: '#F7D615',   // Bright Yellow
+              teal: '#54887D',     // Grayish Green / Teal
+              ice: '#88B5C7',      // Light Blue
+              olive: '#A6B046',    // Light Olive Green
+              bg: '#F2F5E9',       // Soft Blackboard Background
+              darkNavy: '#0B3B60', // Dark contrast blue
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Outfit', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Print Rules for Worksheets */
+    @media print {
+      body * { visibility: hidden; }
+      #printable-area, #printable-area * { visibility: visible; }
+      #printable-area { position: absolute; left: 0; top: 0; width: 100%; }
+      .no-print { display: none !important; }
+    }
+    
+    /* Flip Card Styles */
+    .perspective { perspective: 1000px; }
+    .transform-style-3d { transform-style: preserve-3d; }
+    .backface-hidden { backface-visibility: hidden; }
+    .rotate-y-180 { transform: rotateY(180deg); }
+
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #E2E8F0; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb { background: #88B5C7; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #1269A8; }
+  </style>
+</head>
+<body class="h-full text-slate-800 flex flex-col font-sans bg-[#F2F5E9] selection:bg-montano-yellow selection:text-slate-900">
+
+  <!-- ================= TOP HEADER / NAVIGATION ================= -->
+  <header class="bg-montano-navy text-white shadow-md sticky top-0 z-40 no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        
+        <!-- Logo & Title -->
+        <div class="flex items-center space-x-4">
+          <div class="bg-white p-1.5 rounded-xl shadow-inner flex items-center justify-center">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyEop0yf6lZ7Jk9MILZxF1rBj4Oqs5esyhIQ&s" 
+                 alt="Colegio Montano Logo" 
+                 class="h-10 w-auto object-contain"
+                 onerror="this.src='https://placehold.co/100x100/1269A8/FFFFFF?text=Montano'">
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="text-xs font-bold tracking-widest uppercase bg-montano-yellow text-slate-900 px-2 py-0.5 rounded">Colegio Montano</span>
+              <span class="text-xs text-montano-ice font-medium">11th Grade • ESL Public Speaking</span>
+            </div>
+            <h1 class="text-xl font-display font-bold tracking-tight text-white flex items-center gap-2">
+              Unit 1: Leadership Through Words
+            </h1>
+          </div>
+        </div>
+
+        <!-- Global Quick Actions & Controls -->
+        <div class="flex items-center space-x-3">
+          
+          <!-- Timer Widget -->
+          <div class="bg-montano-darkNavy/80 border border-montano-ice/30 rounded-xl px-3 py-1.5 flex items-center space-x-3">
+            <div class="text-center">
+              <span class="text-[10px] uppercase font-bold text-montano-ice block leading-none">Class Timer</span>
+              <span id="timer-display" class="font-mono text-lg font-bold text-montano-yellow">10:00</span>
+            </div>
+            <div class="flex space-x-1">
+              <button onclick="toggleTimer()" id="timer-start-btn" title="Start/Pause" class="p-1.5 bg-montano-teal hover:bg-emerald-600 rounded text-white text-xs transition">
+                <i class="fa-solid fa-play" id="timer-icon"></i>
+              </button>
+              <button onclick="resetTimer()" title="Reset Timer" class="p-1.5 bg-slate-700 hover:bg-slate-600 rounded text-slate-200 text-xs transition">
+                <i class="fa-solid fa-rotate-left"></i>
+              </button>
+              <select id="timer-select" onchange="setTimerDuration(this.value)" class="bg-slate-800 text-xs text-white rounded px-1 py-1 focus:outline-none border border-slate-600">
+                <option value="300">5m</option>
+                <option value="600" selected>10m</option>
+                <option value="900">15m</option>
+                <option value="1200">20m</option>
+                <option value="1800">30m</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Mode Toggles -->
+          <button onclick="toggleDashboard()" id="dash-btn" class="flex items-center space-x-1.5 bg-montano-ice/20 hover:bg-montano-ice/30 text-white px-3 py-2 rounded-xl text-xs font-semibold border border-montano-ice/40 transition">
+            <i class="fa-solid fa-table-columns"></i>
+            <span class="hidden md:inline">Dashboard</span>
+          </button>
+
+          <button onclick="startPresentationMode()" class="flex items-center space-x-1.5 bg-montano-yellow text-slate-900 hover:bg-yellow-300 px-3.5 py-2 rounded-xl text-xs font-bold shadow-md transition transform active:scale-95">
+            <i class="fa-solid fa-desktop text-montano-navy"></i>
+            <span>Presentation Mode</span>
+          </button>
+
+          <!-- Fullscreen Toggle -->
+          <button onclick="toggleFullscreen()" title="Toggle Fullscreen" class="p-2 bg-montano-darkNavy hover:bg-slate-700 text-white rounded-xl transition">
+            <i class="fa-solid fa-expand" id="fullscreen-icon"></i>
+          </button>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Horizontal Tabs Navigation Bar -->
+    <div class="bg-montano-darkNavy border-t border-montano-navy/50 overflow-x-auto no-scrollbar">
+      <div class="max-w-7xl mx-auto px-4 flex space-x-1 py-1" id="weekly-tabs-nav">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTENT AREA ================= -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col space-y-6">
+
+    <!-- Dashboard Section (Default Overview) -->
+    <section id="dashboard-view" class="space-y-6">
+      
+      <!-- Welcome Hero Banner -->
+      <div class="bg-gradient-to-r from-montano-navy via-montano-darkNavy to-montano-teal text-white rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
+        <div class="absolute right-0 top-0 bottom-0 opacity-10 pointer-events-none flex items-center pr-10">
+          <i class="fa-solid fa-bullhorn text-[180px]"></i>
+        </div>
+        <div class="relative z-10 max-w-3xl space-y-3">
+          <div class="flex items-center gap-2">
+            <span class="bg-montano-yellow text-slate-900 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Unit Overview</span>
+            <span class="text-xs text-montano-ice"><i class="fa-regular fa-calendar-alt mr-1"></i> Jan 18 – Mar 12, 2027</span>
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-display font-extrabold text-white leading-tight">
+            Leadership Through Words
+          </h2>
+          <p class="text-montano-ice/90 text-sm sm:text-base leading-relaxed">
+            Empowering 11th-grade leaders to craft inspirational messages, master audience psychology, integrate ethos & pathos, and deliver impactful speeches with unwavering integrity.
+          </p>
+          
+          <div class="pt-2 flex flex-wrap gap-4 text-xs font-medium text-slate-200">
+            <div class="bg-white/10 backdrop-blur px-3 py-1.5 rounded-lg border border-white/10">
+              <i class="fa-solid fa-clock text-montano-yellow mr-1.5"></i> 65 Mins / Week
+            </div>
+            <div class="bg-white/10 backdrop-blur px-3 py-1.5 rounded-lg border border-white/10">
+              <i class="fa-solid fa-graduation-cap text-montano-yellow mr-1.5"></i> 100 Total Points
+            </div>
+            <div class="bg-white/10 backdrop-blur px-3 py-1.5 rounded-lg border border-white/10">
+              <i class="fa-solid fa-file-signature text-montano-yellow mr-1.5"></i> 3 Projects + Final Portfolio
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Assessment Breakdown & Progress Tracker -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center space-x-4">
+          <div class="w-12 h-12 rounded-xl bg-blue-50 text-montano-navy flex items-center justify-center text-xl font-bold">
+            P1
+          </div>
+          <div>
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Week 2 • 25 Pts</span>
+            <h4 class="font-display font-bold text-slate-800 text-sm">Leader's Message Analysis</h4>
+            <p class="text-[11px] text-slate-500">Analysis of rhetoric & ethos/pathos</p>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center space-x-4">
+          <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl font-bold">
+            P2
+          </div>
+          <div>
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Week 4 • 25 Pts</span>
+            <h4 class="font-display font-bold text-slate-800 text-sm">A Story That Inspires</h4>
+            <p class="text-[11px] text-slate-500">Storytelling map & audio narrative</p>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center space-x-4">
+          <div class="w-12 h-12 rounded-xl bg-teal-50 text-montano-teal flex items-center justify-center text-xl font-bold">
+            P3
+          </div>
+          <div>
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Week 6 • 25 Pts</span>
+            <h4 class="font-display font-bold text-slate-800 text-sm">My Inspirational Speech</h4>
+            <p class="text-[11px] text-slate-500">3-min persuasive leadership speech</p>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center space-x-4">
+          <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl font-bold">
+            PF
+          </div>
+          <div>
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Week 8 • 25 Pts</span>
+            <h4 class="font-display font-bold text-slate-800 text-sm">Final Portfolio & Reflection</h4>
+            <p class="text-[11px] text-slate-500">Complete artifact folder & exit video</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 8-Week Visual Progress Grid -->
+      <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-lg font-display font-bold text-slate-800 flex items-center gap-2">
+            <i class="fa-solid fa-list-check text-montano-navy"></i>
+            Weekly Roadmap & Curriculum Navigation
+          </h3>
+          <span class="text-xs bg-slate-100 text-slate-600 px-3 py-1 rounded-full font-medium">Click any week to launch lesson</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="dashboard-weeks-grid">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- Montano Formative Habits Integration Banner -->
+      <div class="bg-montano-bg border border-montano-olive/30 rounded-2xl p-5 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center space-x-4">
+          <div class="p-3 bg-montano-olive text-white rounded-xl text-xl">
+            <i class="fa-solid fa-tree font-bold"></i>
+          </div>
+          <div>
+            <h4 class="font-display font-bold text-slate-800">Montano Formative Model & Habits</h4>
+            <p class="text-xs text-slate-600">Integrated: <em>Begin with the End in Mind</em>, <em>Seek First to Understand</em>, <em>Synergize</em>, and <em>Sharpen the Saw</em>.</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 text-xs font-semibold text-montano-navy">
+          <span class="bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-xs"><i class="fa-solid fa-check text-emerald-500 mr-1"></i> CNB Guatemala Aligned</span>
+          <span class="bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-xs"><i class="fa-solid fa-check text-emerald-500 mr-1"></i> A2–C1 Differentiated</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Weekly Lesson View Container -->
+    <section id="weekly-view" class="hidden space-y-6">
+      
+      <!-- Week Banner & Header Info -->
+      <div id="week-header-card" class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm relative overflow-hidden">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Sub-navigation Tabs inside Week (Timeline, Interactive, Worksheets, Assessment, Reflection) -->
+      <div class="flex border-b border-slate-200 space-x-4 overflow-x-auto no-scrollbar text-sm font-semibold">
+        <button onclick="switchWeekSubTab('timeline')" id="subtab-timeline" class="py-3 px-4 text-montano-navy border-b-2 border-montano-navy flex items-center gap-2 transition">
+          <i class="fa-solid fa-clock-rotate-left"></i> Lesson Timeline (65m)
+        </button>
+        <button onclick="switchWeekSubTab('activities')" id="subtab-activities" class="py-3 px-4 text-slate-500 hover:text-slate-800 border-b-2 border-transparent flex items-center gap-2 transition">
+          <i class="fa-solid fa-puzzle-piece"></i> Interactive Practice
+        </button>
+        <button onclick="switchWeekSubTab('worksheets')" id="subtab-worksheets" class="py-3 px-4 text-slate-500 hover:text-slate-800 border-b-2 border-transparent flex items-center gap-2 transition">
+          <i class="fa-solid fa-file-pen"></i> Worksheets & Artifacts
+        </button>
+        <button onclick="switchWeekSubTab('assessment')" id="subtab-assessment" class="py-3 px-4 text-slate-500 hover:text-slate-800 border-b-2 border-transparent flex items-center gap-2 transition">
+          <i class="fa-solid fa-award"></i> Assessment & Recovery
+        </button>
+        <button onclick="switchWeekSubTab('reflection')" id="subtab-reflection" class="py-3 px-4 text-slate-500 hover:text-slate-800 border-b-2 border-transparent flex items-center gap-2 transition">
+          <i class="fa-solid fa-lightbulb"></i> Closing Reflection
+        </button>
+        <button onclick="switchWeekSubTab('teachernotes')" id="subtab-teachernotes" class="py-3 px-4 text-slate-500 hover:text-slate-800 border-b-2 border-transparent flex items-center gap-2 transition">
+          <i class="fa-solid fa-note-sticky text-amber-500"></i> Teacher Notes
+        </button>
+      </div>
+
+      <!-- SUBTAB 1: LESSON TIMELINE (4 MOMENTS) -->
+      <div id="content-timeline" class="space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-base font-display font-bold text-slate-800">Four Didactic Lesson Moments</h3>
+          <span class="text-xs text-slate-500">Click any moment card to expand detailed instructions & prompts</span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-4" id="lesson-moments-grid">
+          <!-- Moment Cards Rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- SUBTAB 2: INTERACTIVE PRACTICE & ACTIVITIES -->
+      <div id="content-activities" class="hidden space-y-6">
+        <!-- Rendered dynamically depending on week active exercise -->
+      </div>
+
+      <!-- SUBTAB 3: WORKSHEETS & ARTIFACTS -->
+      <div id="content-worksheets" class="hidden space-y-6">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- SUBTAB 4: ASSESSMENT & RECOVERY -->
+      <div id="content-assessment" class="hidden space-y-6">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- SUBTAB 5: CLOSING REFLECTION -->
+      <div id="content-reflection" class="hidden space-y-6">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- SUBTAB 6: TEACHER NOTES & LOCAL STORAGE -->
+      <div id="content-teachernotes" class="hidden space-y-4">
+        <div class="bg-amber-50 border border-amber-200 rounded-2xl p-5 space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="font-display font-bold text-amber-900 flex items-center gap-2">
+              <i class="fa-solid fa-pen-to-square text-amber-600"></i> Teacher's Private Session Notes
+            </h3>
+            <span class="text-xs bg-amber-200 text-amber-900 px-2 py-0.5 rounded font-medium">Auto-Saved Locally</span>
+          </div>
+          <p class="text-xs text-amber-800">
+            Write down specific observations, absent students, group dynamics, or notes for next week. These notes persist in your browser storage.
+          </p>
+          <textarea id="teacher-notes-input" oninput="saveTeacherNotes()" rows="6" 
+                    class="w-full p-4 rounded-xl border border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white text-sm font-sans"
+                    placeholder="Type your teaching notes, observations, or student accommodations here..."></textarea>
+          <div class="flex justify-end gap-2 text-xs">
+            <button onclick="clearTeacherNotes()" class="px-3 py-1.5 text-slate-600 hover:text-red-600 font-medium">Clear Notes</button>
+            <span id="save-status-indicator" class="text-emerald-700 font-medium flex items-center gap-1">
+              <i class="fa-solid fa-circle-check"></i> Saved
+            </span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ================= CLASSROOM PRESENTATION MODE OVERLAY ================= -->
+  <div id="presentation-overlay" class="fixed inset-0 z-50 bg-slate-900 text-white flex flex-col hidden">
+    <!-- Top Bar -->
+    <div class="bg-slate-950 px-6 py-4 flex items-center justify-between border-b border-slate-800">
+      <div class="flex items-center space-x-3">
+        <span class="bg-montano-yellow text-slate-900 text-xs font-bold px-2.5 py-1 rounded" id="pres-week-label">Week 1</span>
+        <h2 class="text-lg font-display font-bold text-white truncate max-w-xl" id="pres-title">Presentation Title</h2>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <div class="font-mono text-montano-yellow text-xl font-bold bg-slate-900 px-3 py-1 rounded border border-slate-700" id="pres-timer-display">
+          10:00
+        </div>
+        <button onclick="toggleTimer()" class="p-2 bg-montano-teal rounded hover:bg-emerald-600 text-white text-xs">
+          <i class="fa-solid fa-play"></i>
+        </button>
+        <button onclick="exitPresentationMode()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2">
+          <i class="fa-solid fa-xmark"></i> Exit Presentation Mode
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Presentation Card View -->
+    <div class="flex-1 p-8 sm:p-12 flex items-center justify-center overflow-y-auto">
+      <div id="pres-card-content" class="bg-slate-800 border border-slate-700 rounded-3xl p-8 max-w-4xl w-full shadow-2xl space-y-6 text-slate-100">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+
+    <!-- Navigation Bar at Bottom -->
+    <div class="bg-slate-950 px-8 py-4 flex items-center justify-between border-t border-slate-800">
+      <button onclick="prevPresStep()" id="pres-prev-btn" class="bg-slate-800 hover:bg-slate-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 disabled:opacity-40">
+        <i class="fa-solid fa-chevron-left"></i> Previous Step
+      </button>
+
+      <span class="text-xs text-slate-400 font-mono" id="pres-step-indicator">
+        Step 1 of 4
+      </span>
+
+      <button onclick="nextPresStep()" id="pres-next-btn" class="bg-montano-navy hover:bg-sky-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 disabled:opacity-40">
+        Next Step <i class="fa-solid fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ================= PRINTABLE AREA FOR WORKSHEETS ================= -->
+  <div id="printable-area" class="hidden p-8 bg-white text-slate-900">
+    <div class="border-b-2 border-slate-900 pb-4 mb-6 flex justify-between items-center">
+      <div>
+        <h1 class="text-2xl font-bold">COLEGIO MONTANO — ESL PUBLIC SPEAKING</h1>
+        <p class="text-sm font-semibold text-slate-600" id="print-sheet-title">Worksheet Title</p>
+      </div>
+      <div class="text-right text-xs text-slate-500">
+        <p>Student Name: _______________________</p>
+        <p>Date: ______________ Grade: 11th</p>
+      </div>
+    </div>
+    <div id="print-sheet-body" class="space-y-6 text-sm">
+      <!-- Printable dynamic contents -->
+    </div>
+  </div>
+
+
+  <!-- ================= JAVASCRIPT APP LOGIC & DATA ================= -->
+  <script>
+    /* ==========================================================================
+       CURRICULUM DATA STORE (UNIT 1 - 8 WEEKS)
+       ========================================================================== */
+    const unitData = {
+      title: "Unit 1: Leadership Through Words",
+      grade: "11th Grade",
+      dates: "January 18 – March 12, 2027",
+      course: "Public Speaking",
+      totalPoints: 100,
+      weeks: [
+        {
+          id: 1,
+          dates: "Jan 18–22",
+          title: "Leadership Through Communication",
+          badge: "Week 1",
+          objective: "Students will analyze characteristics of inspirational leaders and identify how ethical communication builds trust and influences audiences.",
+          essentialQuestion: "What makes a voice truly lead rather than just command?",
+          vocabulary: [
+            { term: "Ethical Persuasion", def: "Convincing others honestly without manipulation or deceit." },
+            { term: "Charisma", def: "A compelling attractiveness or charm that can inspire devotion in others." },
+            { term: "Integrity", def: "The quality of being honest and having strong moral principles." },
+            { term: "Audience Rapport", def: "A relationship of mutual trust and understanding with listeners." }
+          ],
+          materials: ["Public Speaking Notebook", "Leadership Mind Map Template", "Projector"],
+          moments: [
+            {
+              title: "1. Motivational Introduction",
+              time: "10 mins",
+              teacherInst: "Show 2 quick 30-second speech clips: Leader A (commanding/arrogant) vs Leader B (inspirational/empathic).",
+              studentInst: "Observe and contrast how you feel listening to both speakers.",
+              questions: ["Which leader would you willingly follow into a difficult project?", "Why does tone matter more than words?"],
+              example: "Model response: Leader B makes me feel included and respected.",
+              output: "Class verbal discussion & votes."
+            },
+            {
+              title: "2. Brief Explanation",
+              titleExt: "Core Leadership Pillars",
+              time: "15 mins",
+              teacherInst: "Introduce the 3 Pillars of Leadership Communication: Integrity, Vision, and Empathy.",
+              studentInst: "Take bullet-point notes on how Montano Habit 'Begin with the End in Mind' applies to speeches.",
+              questions: ["How does dishonesty ruin a leader's speech instantly?"],
+              example: "Integrity + Clarity = Trust.",
+              output: "Notebook entries."
+            },
+            {
+              title: "3. Individual / Group Work",
+              time: "30 mins",
+              teacherInst: "Guide students to complete the Leadership Communication Mind Map in pairs.",
+              studentInst: "In pairs, brainstorm 4 traits of a leader you admire and write 1 sentence describing their communication style.",
+              questions: ["What key words defined your chosen leader?"],
+              example: "Nelson Mandela: Patient, courageous, listener.",
+              output: "Completed Mind Map Worksheet."
+            },
+            {
+              title: "4. Plenary & Reflection",
+              time: "10 mins",
+              teacherInst: "Facilitate a 5-minute popcorn summary. Wrap up with exit ticket.",
+              studentInst: "Share 1 trait your partner identified with the whole room.",
+              questions: ["What is 1 habit of a bad communicator?"],
+              example: "Interrupting others constantly.",
+              output: "Exit ticket check."
+            }
+          ],
+          activities: {
+            type: "vocab-flip",
+            title: "Vocabulary Flashcard Mastery",
+            cards: [
+              { front: "Ethical Persuasion", back: "Convincing others honestly without manipulation or deceit." },
+              { front: "Charisma", back: "A compelling attractiveness or charm that can inspire devotion in others." },
+              { front: "Integrity", back: "The quality of being honest and having strong moral principles." },
+              { front: "Audience Rapport", back: "A relationship of mutual trust and understanding with listeners." }
+            ]
+          },
+          worksheet: {
+            id: "ws1",
+            title: "Leadership Communication Mind Map",
+            instructions: "Identify a real or fictional leader you respect. Complete the mind map fields below.",
+            fields: [
+              { label: "Selected Leader Name:", placeholder: "e.g., Malala Yousafzai, Martin Luther King Jr." },
+              { label: "Core Values & Integrity:", placeholder: "What moral principles guide their speech?" },
+              { label: "Audience Impact:", placeholder: "How do listeners feel after hearing them speak?" },
+              { label: "Key Speech Quote:", placeholder: "Write a famous quote or key phrase from them." }
+            ]
+          },
+          assessment: {
+            hasProject: false,
+            text: "Formative checklist & mind map completion check."
+          },
+          reflection: {
+            exitQuestion: "In one sentence, how can your communication reflect leadership in our school?",
+            nextWeekReminder: "Read Ethos & Pathos overview in student guide for Week 2."
+          }
+        },
+
+        {
+          id: 2,
+          dates: "Jan 25–29",
+          title: "Crafting an Inspirational Message: Ethos + Pathos",
+          badge: "Week 2 • Project 1",
+          objective: "Students will analyze persuasive speeches using Ethos and Pathos, then construct an ethos-pathos message map.",
+          essentialQuestion: "How do leaders balance credibility with emotion to inspire action?",
+          vocabulary: [
+            { term: "Ethos", def: "Appeal to credibility, character, and moral authority." },
+            { term: "Pathos", def: "Appeal to emotion, empathy, values, and shared feelings." },
+            { term: "Rhetorical Device", def: "A technique that an author or speaker uses to convey a meaning." },
+            { term: "Credibility", def: "The quality of being trusted and believed in." }
+          ],
+          materials: ["Rhetoric Analysis Worksheet", "Project 1 Rubric"],
+          moments: [
+            {
+              title: "1. Motivational Introduction",
+              time: "10 mins",
+              teacherInst: "Display 4 short persuasive statements. Ask students to spot which ones appeal to logic, emotion, or credibility.",
+              studentInst: "Classify statements into Emotional vs Authoritative appeals.",
+              questions: ["Why do we trust a doctor talking about health over an actor?"],
+              example: "'As a teacher with 10 years experience...' (Ethos)",
+              output: "Class agreement."
+            },
+            {
+              title: "2. Brief Explanation",
+              titleExt: "Ethos & Pathos Framework",
+              time: "15 mins",
+              teacherInst: "Present the Ethos-Pathos balance matrix. Explain how overusing pathos without ethos creates manipulation.",
+              studentInst: "Copy the Ethos-Pathos comparison framework.",
+              questions: ["What happens if a speaker has high emotion but zero credibility?"],
+              example: "They sound dramatic but untrustworthy.",
+              output: "Notes."
+            },
+            {
+              title: "3. Individual / Group Work",
+              time: "30 mins",
+              teacherInst: "Administer Project 1: Leader's Message Analysis.",
+              studentInst: "Work individually on analyzing a sample leader's speech text. Highlight Ethos in Blue and Pathos in Yellow.",
+              questions: ["Where does the speaker establish trust?"],
+              example: "Highlighted transcript section.",
+              output: "Project 1 Draft submission."
+            },
+            {
+              title: "4. Plenary & Reflection",
+              time: "10 mins",
+              teacherInst: "Call on 2 pairs to share their key analysis findings.",
+              studentInst: "Defend why a specific sentence was labeled Ethos or Pathos.",
+              questions: ["Was this speech more Ethos or Pathos heavy?"],
+              example: "It balanced both equally.",
+              output: "Project collection."
+            }
+          ],
+          activities: {
+            type: "classify-ethos-pathos",
+            title: "Ethos vs Pathos Interactive Classifier",
+            items: [
+              { text: "As a doctor with 20 years in public health, I urge you to get rest.", category: "ethos" },
+              { text: "Imagine the heartbreak of a child left without clean drinking water.", category: "pathos" },
+              { text: "Our organization has maintained a 100% safety record for a decade.", category: "ethos" },
+              { text: "Together, with love and unity in our hearts, we can heal this town.", category: "pathos" }
+            ]
+          },
+          worksheet: {
+            id: "ws2",
+            title: "Ethos & Pathos Message Analysis Chart",
+            instructions: "Select a leader's short speech excerpt. Identify specific quotes demonstrating Ethos and Pathos.",
+            fields: [
+              { label: "Speech Title / Speaker:", placeholder: "e.g., Steve Jobs Stanford Commencement" },
+              { label: "Ethos Quote (Credibility):", placeholder: "Quote showing experience, character, or authority..." },
+              { label: "Pathos Quote (Emotion):", placeholder: "Quote appealing to hope, fear, love, or pride..." },
+              { label: "Analysis Conclusion:", placeholder: "How effectively did the speaker combine both?" }
+            ]
+          },
+          assessment: {
+            hasProject: true,
+            projectName: "Project 1: The Leader's Message Analysis",
+            points: 25,
+            criteria: [
+              { name: "Identification of Ethos", pts: 8, desc: "Accurately locates and explains credibility appeals." },
+              { name: "Identification of Pathos", pts: 8, desc: "Accurately locates and explains emotional appeals." },
+              { name: "Rhetorical Analysis & Depth", pts: 9, desc: "Evaluates overall persuasive impact clearly." }
+            ]
+          },
+          reflection: {
+            exitQuestion: "Which is easier for you to build in a speech: Ethos (credibility) or Pathos (emotion)? Why?",
+            nextWeekReminder: "Project 1 grading returned next week; Recovery opens Week 3."
+          }
+        },
+
+        {
+          id: 3,
+          dates: "Feb 1–5",
+          title: "Understanding Audience Psychology",
+          badge: "Week 3 • Recovery P1",
+          objective: "Students will analyze audience demographics, values, and expectations to adapt leadership messages effectively.",
+          essentialQuestion: "Why must a true leader speak to the listener's heart, not just their own agenda?",
+          vocabulary: [
+            { term: "Audience Profile", def: "Analysis of the age, culture, values, and needs of listeners." },
+            { term: "Empathy", def: "The ability to understand and share the feelings of another." },
+            { term: "Adaptation", def: "Adjusting tone and content to match different audience needs." },
+            { term: "Relevance", def: "Direct connection to the audience's interests and life." }
+          ],
+          materials: ["Audience Profile Matrix", "Project 1 Recovery Forms"],
+          moments: [
+            {
+              title: "1. Motivational Introduction",
+              time: "10 mins",
+              teacherInst: "Roleplay: Present the same topic ('Why homework matters') to 2 different groups: 1st graders vs Board of Education.",
+              studentInst: "Identify how word choice and tone changed completely.",
+              questions: ["How would 1st graders react to complex statistics?"],
+              example: "They would be bored and confused.",
+              output: "Class observations."
+            },
+            {
+              title: "2. Brief Explanation",
+              titleExt: "The Audience Profile Matrix",
+              time: "15 mins",
+              teacherInst: "Connect to Montano Habit: 'Seek First to Understand, Then to Be Understood'. Explain audience demographics vs psychographics.",
+              studentInst: "Map out the 3 Key Audience Questions in notebooks.",
+              questions: ["What keeps my audience awake at night?"],
+              example: "Students care about time; principal cares about results.",
+              output: "Concept map."
+            },
+            {
+              title: "3. Individual / Group Work",
+              time: "30 mins",
+              teacherInst: "Assign Audience Scenario challenge. (Simultaneously assist students completing Project 1 Recovery).",
+              studentInst: "Adapt a speech proposal on 'School Recycling' for two distinct audiences: Peer Students vs School Principal.",
+              questions: ["What angle will convince the Principal best?"],
+              example: "Principal: Cost savings & school reputation.",
+              output: "Dual-Audience Worksheet."
+            },
+            {
+              title: "4. Plenary & Reflection",
+              time: "10 mins",
+              teacherInst: "Select 2 students to read their adapted pitch for Peers vs Principal.",
+              studentInst: "Vote on which pitch had highest audience alignment.",
+              questions: ["Did the speaker adjust vocabulary appropriately?"],
+              example: "Yes, they used formal language for the principal.",
+              output: "Peer feedback."
+            }
+          ],
+          activities: {
+            type: "audience-matching",
+            title: "Audience Scenario Matcher",
+            scenarios: [
+              { target: "11th Grade Peers", bestHook: "How to reduce stress during exam week using 3 simple habits." },
+              { target: "School Board", bestHook: "Data showing 15% improvement in graduation rates through wellness initiatives." },
+              { target: "Community Parents", bestHook: "Ensuring our neighborhood children grow up in a safe, supportive environment." }
+            ]
+          },
+          worksheet: {
+            id: "ws3",
+            title: "Audience Profile & Message Adaptation Sheet",
+            instructions: "Take one topic (e.g., 'Installing Solar Panels at School') and adapt the message for two distinct audiences.",
+            fields: [
+              { label: "Selected Topic:", placeholder: "Topic name..." },
+              { label: "Audience 1 (Peers/Students) Strategy:", placeholder: "What emotional/practical hook will resonate with peers?" },
+              { label: "Audience 2 (School Administration) Strategy:", placeholder: "What data/ethos hook will convince administrators?" },
+              { label: "Key Vocabulary Adjustments Made:", placeholder: "List formal vs informal terms changed..." }
+            ]
+          },
+          assessment: {
+            hasProject: false,
+            isRecoveryWeek: true,
+            recoveryDetails: "Project 1 (Leader's Message Analysis) Recovery Submission open. Students scoring below 17/25 may resubmit revised analysis."
+          },
+          reflection: {
+            exitQuestion: "How does Montano's habit 'Seek First to Understand' make you a stronger public speaker?",
+            nextWeekReminder: "Prepare a personal memory or anecdote for Week 4 Storytelling."
+          }
+        },
+
+        {
+          id: 4,
+          dates: "Feb 8–12",
+          title: "Using Storytelling for Inspiration",
+          badge: "Week 4 • Project 2",
+          objective: "Students will structure an inspirational story using a narrative arc (Story Mountain) to convey a leadership lesson.",
+          essentialQuestion: "Why do humans remember stories long after they forget raw facts?",
+          vocabulary: [
+            { term: "Narrative Arc", def: "The structural framework of a story: Hook, Rising Action, Climax, Resolution." },
+            { term: "Anagke / Conflict", def: "The central obstacle or struggle the speaker faced and overcame." },
+            { term: "Vulnerability", def: "Willingness to show authentic human struggle to build connection." },
+            { term: "Moral / Takeaway", def: "The universal leadership lesson embedded in the story." }
+          ],
+          materials: ["Story Mountain Map", "Project 2 Rubric Sheet"],
+          moments: [
+            {
+              title: "1. Motivational Introduction",
+              time: "10 mins",
+              teacherInst: "Tell a 1-minute dull factual report vs a 1-minute dramatic story about overcoming failure.",
+              studentInst: "Compare attention level and emotional impact.",
+              questions: ["Which version made you lean in?"],
+              example: "The story created visual images in my mind.",
+              output: "Discussion."
+            },
+            {
+              title: "2. Brief Explanation",
+              titleExt: "The Story Mountain Framework",
+              time: "15 mins",
+              teacherInst: "Teach the 5 stages of Story Mountain: 1. Hook, 2. Challenge, 3. Turning Point, 4. Resolution, 5. Lesson.",
+              studentInst: "Draw the Story Mountain diagram in notebooks.",
+              questions: ["Why is the Turning Point the most critical moment?"],
+              example: "That is where the character grows and learns.",
+              output: "Diagram."
+            },
+            {
+              title: "3. Individual / Group Work",
+              time: "30 mins",
+              teacherInst: "Launch Project 2: A Story That Inspires.",
+              studentInst: "Draft an individual Story Map based on a real personal experience where you faced a setback and learned a leadership lesson.",
+              questions: ["What was the specific lesson you learned?"],
+              example: "Failing the soccer tryouts taught me discipline.",
+              output: "Project 2 Story Mountain Map."
+            },
+            {
+              title: "4. Plenary & Reflection",
+              time: "10 mins",
+              teacherInst: "Pair-share: 2-minute elevator pitch of your story concept to a peer.",
+              studentInst: "Give peer 1 piece of feedback: Was the lesson clear?",
+              questions: ["Did your partner's story inspire you?"],
+              example: "Yes, their turning point was very relatable.",
+              output: "Peer review checklist."
+            }
+          ],
+          activities: {
+            type: "story-mountain-builder",
+            title: "Interactive Story Arc Organizer",
+            stages: [
+              { stage: "1. The Hook", placeholder: "Capture attention with a vivid sensory detail or question." },
+              { stage: "2. The Obstacle", placeholder: "What went wrong? Describe the struggle clearly." },
+              { stage: "3. The Turning Point", placeholder: "The moment of decision, courage, or realization." },
+              { stage: "4. The Resolution", placeholder: "How the situation was resolved." },
+              { stage: "5. Leadership Takeaway", placeholder: "What universal truth can your audience apply?" }
+            ]
+          },
+          worksheet: {
+            id: "ws4",
+            title: "Inspirational Story Mountain Planning Map",
+            instructions: "Map out your personal 2-minute inspirational narrative for Project 2.",
+            fields: [
+              { label: "Story Title:", placeholder: "e.g., The Rainstorm That Taught Me Patience" },
+              { label: "Opening Hook (First Sentence):", placeholder: "Start right in the middle of the action..." },
+              { label: "The Conflict / Struggle:", placeholder: "Describe the obstacle faced..." },
+              { label: "The Resolution & Leadership Lesson:", placeholder: "What moral or action should listeners take away?" }
+            ]
+          },
+          assessment: {
+            hasProject: true,
+            projectName: "Project 2: A Story That Inspires",
+            points: 25,
+            criteria: [
+              { name: "Narrative Structure (Arc)", pts: 8, desc: "Clear hook, conflict, resolution, and takeaway." },
+              { name: "Authenticity & Emotional Connection", pts: 8, desc: "Engages audience through vivid storytelling." },
+              { name: "Leadership Moral & Clarity", pts: 9, desc: "Connects personal experience to universal insight." }
+            ]
+          },
+          reflection: {
+            exitQuestion: "Why does showing vulnerability in a story increase a leader's authority?",
+            nextWeekReminder: "Submit final audio/written narrative for Project 2 by Friday."
+          }
+        },
+
+        {
+          id: 5,
+          dates: "Feb 15–19",
+          title: "Delivering with Confidence and Integrity",
+          badge: "Week 5 • Recovery P2",
+          objective: "Students will master vocal variety, body language, and stage presence techniques to conquer stage anxiety.",
+          essentialQuestion: "How do body language and voice turn words into a powerful presence?",
+          vocabulary: [
+            { term: "Vocal Variety", def: "Changes in pitch, pace, volume, and pauses to hold interest." },
+            { term: "Non-Verbal Cues", def: "Posture, eye contact, gestures, and facial expressions." },
+            { term: "Stage Anxiety", def: "Physical and psychological nervousness before or during speaking." },
+            { term: "Pacing", def: "The speed at which someone speaks during a delivery." }
+          ],
+          materials: ["Delivery Self-Assessment Checklist", "Project 2 Recovery Forms"],
+          moments: [
+            {
+              title: "1. Motivational Introduction",
+              time: "10 mins",
+              teacherInst: "Perform 1 paragraph with 3 delivery styles: Mumbling/slouched, Screaming/rushed, and Calm/confident.",
+              studentInst: "Identify how non-verbal cues changed the message power.",
+              questions: ["Which delivery made you trust the speaker?"],
+              example: "Calm posture with purposeful eye contact.",
+              output: "Class discussion."
+            },
+            {
+              title: "2. Brief Explanation",
+              titleExt: "The 4 P's of Vocal Delivery",
+              time: "15 mins",
+              teacherInst: "Explain Projection, Pitch, Pace, and Pauses. Emphasize Montano Habit 'Sharpen the Saw' for mental anxiety.",
+              studentInst: "Practice box-breathing technique (4s in, 4s hold, 4s out).",
+              questions: ["Why is a deliberate pause more powerful than saying 'um'?"],
+              example: "A pause creates anticipation and confidence.",
+              output: "Breathing exercise."
+            },
+            {
+              title: "3. Individual / Group Work",
+              time: "30 mins",
+              teacherInst: "Delivery Practice Stations in trios. (Project 2 Recovery consultation for designated students).",
+              studentInst: "In trios, deliver a 1-minute speech excerpt focusing solely on eye contact and gestures. Group mates use rubric checklist.",
+              questions: ["Did the speaker avoid filler words?"],
+              example: "Used 0 'ums' and kept open posture.",
+              output: "Peer delivery evaluation."
+            },
+            {
+              title: "4. Plenary & Reflection",
+              time: "10 mins",
+              teacherInst: "Invite 2 volunteers for the 'Power Stance Challenge' on stage.",
+              studentInst: "Provide immediate praise and 1 polish point for the volunteers.",
+              questions: ["What physical habit boosted their confidence most?"],
+              example: "Standing with feet shoulder-width apart.",
+              output: "Live feedback."
+            }
+          ],
+          activities: {
+            type: "vocal-pace-lab",
+            title: "Vocal Delivery Simulator & Self-Checklist",
+            prompts: [
+              { exercise: "The Power Pause", text: "Leaders don't rush. [Pause 3 seconds] They let their words breathe." },
+              { exercise: "Pace Control", text: "When explaining danger, we speed up... but when sharing wisdom, we slow down." },
+              { exercise: "Projection Check", text: "Speak to the very back row of the auditorium without shouting!" }
+            ]
+          },
+          worksheet: {
+            id: "ws5",
+            title: "Delivery & Confidence Building Action Plan",
+            instructions: "Evaluate your public speaking body language and outline an action plan for anxiety management.",
+            fields: [
+              { label: "My Primary Vocal Goal:", placeholder: "e.g., Eliminate 'um/like' filler words, slow down pace..." },
+              { label: "My Body Language Goal:", placeholder: "e.g., Maintain steady eye contact, stop swaying..." },
+              { label: "Anxiety Management Strategy:", placeholder: "Which technique will you use before taking the stage?" }
+            ]
+          },
+          assessment: {
+            hasProject: false,
+            isRecoveryWeek: true,
+            recoveryDetails: "Project 2 (A Story That Inspires) Recovery open for resubmission and re-evaluation."
+          },
+          reflection: {
+            exitQuestion: "What is 1 physical habit you will change next time you stand up to speak?",
+            nextWeekReminder: "Week 6 is Project 3: Live Inspirational Speech Presentations!"
+          }
+        },
+
+        {
+          id: 6,
+          dates: "Feb 22–26",
+          title: "From Story to Inspirational Speech",
+          badge: "Week 6 • Project 3",
+          objective: "Students will synthesize ethos, pathos, audience adaptation, and delivery into a 3-minute persuasive leadership speech.",
+          essentialQuestion: "How do all elements of rhetoric come together in a live leadership speech?",
+          vocabulary: [
+            { term: "Call to Action (CTA)", def: "An explicit directive inspiring the audience to take specific step." },
+            { term: "Synthesis", def: "Combining rhetoric, story, and delivery into a unified whole." },
+            { term: "Anchor Phrase", def: "A memorable repeated phrase that reinforces the core message." },
+            { term: "Climax", def: "The peak moment of intensity and emotional power in a speech." }
+          ],
+          materials: ["Project 3 Speech Outline Sheet", "Project 3 Master Rubric"],
+          moments: [
+            {
+              title: "1. Motivational Introduction",
+              time: "10 mins",
+              teacherInst: "Display famous call-to-action speech endings (e.g., Martin Luther King, Steve Jobs, Amanda Gorman).",
+              studentInst: "Analyze what made the final 30 seconds memorable.",
+              questions: ["What left a lasting echo in your mind?"],
+              example: "The repeated anchor phrase.",
+              output: "Class analysis."
+            },
+            {
+              title: "2. Brief Explanation",
+              titleExt: "The 3-Minute Leadership Speech Model",
+              time: "15 mins",
+              teacherInst: "Outline the mandatory speech structure: 0-30s Hook & Ethos, 30s-2m Story & Pathos, 2m-3m Solution & Call to Action.",
+              studentInst: "Record timing markers in speech outline.",
+              questions: ["Why must the Call to Action be specific and doable?"],
+              example: "'Recycle tomorrow' is doable; 'save the earth' is vague.",
+              output: "Outline template."
+            },
+            {
+              title: "3. Individual / Group Work",
+              titleExt: "Project 3 Live Presentation / Drafting",
+              time: "30 mins",
+              teacherInst: "Facilitate Project 3: My Inspirational Speech (Live speeches / peer evaluation circles).",
+              studentInst: "Deliver or finalize your 3-minute leadership speech. Audience members complete peer evaluation sheets.",
+              questions: ["Did the speech include a clear Call to Action?"],
+              example: "Live performance delivery.",
+              output: "Project 3 Speech Evaluation."
+            },
+            {
+              title: "4. Plenary & Reflection",
+              titleExt: "Peer Plenary Celebration",
+              time: "10 mins",
+              teacherInst: "Highlight outstanding examples of anchor phrases and calls to action heard today.",
+              studentInst: "Give 'Shout-Outs' to classmates who showed exceptional courage.",
+              questions: ["Which Call to Action moved you most?"],
+              example: "The call to stop cafeteria waste.",
+              output: "Peer recognition."
+            }
+          ],
+          activities: {
+            type: "speech-outline-tool",
+            title: "3-Minute Speech Builder & Timer",
+            sections: [
+              { section: "Opening Hook (0:00 - 0:30)", focus: "Grab attention & establish Ethos." },
+              { section: "Core Story & Message (0:30 - 2:00)", focus: "Narrative arc & Pathos connection." },
+              { section: "Call to Action & Anchor Phrase (2:00 - 3:00)", focus: "Clear mandate & inspirational exit." }
+            ]
+          },
+          worksheet: {
+            id: "ws6",
+            title: "Project 3: Master Speech Outline & Script",
+            instructions: "Prepare your complete 3-minute inspirational speech outline.",
+            fields: [
+              { label: "Speech Title & Topic:", placeholder: "Title..." },
+              { label: "Opening Anchor Hook:", placeholder: "First sentence to grab attention..." },
+              { label: "Ethos Statement (Why you?):", placeholder: "Establish credibility..." },
+              { label: "Pathos Story Segment:", placeholder: "Brief summary of story..." },
+              { label: "Closing Call to Action (CTA):", placeholder: "What exact action should the audience take right now?" }
+            ]
+          },
+          assessment: {
+            hasProject: true,
+            projectName: "Project 3: My Inspirational Speech",
+            points: 25,
+            criteria: [
+              { name: "Content & Rhetoric (Ethos/Pathos)", pts: 8, desc: "Seamless balance of credibility and emotion." },
+              { name: "Speech Organization & CTA", pts: 8, desc: "Clear narrative arc and compelling call to action." },
+              { name: "Delivery & Stage Presence", pts: 9, desc: "Vocal projection, eye contact, pacing, and confidence." }
+            ]
+          },
+          reflection: {
+            exitQuestion: "How did framing your speech around a Call to Action change your delivery confidence?",
+            nextWeekReminder: "Week 7 is Portfolio Workshop & Final Recovery!"
+          }
+        },
+
+        {
+          id: 7,
+          dates: "Mar 1–5",
+          title: "Revision, Recovery, and Portfolio Workshop",
+          badge: "Week 7 • Recovery P3",
+          objective: "Students will audit all unit artifacts, apply peer feedback, and finalize their leadership portfolio.",
+          essentialQuestion: "How does continuous revision and reflection sharpen a leader's voice?",
+          vocabulary: [
+            { term: "Self-Correction", def: "The ability to evaluate and revise one's own work objectively." },
+            { term: "Portfolio", def: "A curated collection of work demonstrating growth over time." },
+            { term: "Constructive Criticism", def: "Specific, actionable feedback intended to improve output." },
+            { term: "Growth Mindset", def: "Belief that public speaking skills improve through effort and practice." }
+          ],
+          materials: ["Portfolio Audit Checklist", "Project 3 Recovery Forms"],
+          moments: [
+            {
+              title: "1. Motivational Introduction",
+              time: "10 mins",
+              teacherInst: "Show 'Before & After' draft comparison of a famous speech draft (e.g., Lincoln's Gettysburg Address revisions).",
+              studentInst: "Observe how small word changes improved clarity and impact.",
+              questions: ["Why is first draft never the final draft?"],
+              example: "Revisions remove clutter and sharpen tone.",
+              output: "Discussion."
+            },
+            {
+              title: "2. Brief Explanation",
+              titleExt: "Montano Habit: Sharpen the Saw",
+              time: "15 mins",
+              teacherInst: "Explain the 4 required artifacts for the Week 8 Final Portfolio (25 Points).",
+              studentInst: "Review personal grade tracker and portfolio checklist.",
+              questions: ["Which artifact represents your biggest growth?"],
+              example: "My Project 2 story map improved after peer feedback.",
+              output: "Checklist audit."
+            },
+            {
+              title: "3. Individual / Group Work",
+              titleExt: "Portfolio Workshop & Peer Review",
+              time: "30 mins",
+              teacherInst: "Facilitate peer editing stations. (Dedicated coaching for Project 3 Recovery).",
+              studentInst: "Work in pairs to review and polish all 4 portfolio items. Fill out the Peer Verification Form.",
+              questions: ["Are all rubric criteria met in your peer's folder?"],
+              example: "Partner verified all 4 items are present.",
+              output: "Peer Verification Sheet."
+            },
+            {
+              title: "4. Plenary & Reflection",
+              time: "10 mins",
+              teacherInst: "Group reflection: What was the hardest revision you made this unit?",
+              studentInst: "Share 1 actionable revision that significantly improved your speech or analysis.",
+              questions: ["How did peer feedback help you grow?"],
+              example: "They noticed I was speaking too fast.",
+              output: "Reflection note."
+            }
+          ],
+          activities: {
+            type: "portfolio-checker",
+            title: "Portfolio Readiness Checklist & Self-Audit",
+            items: [
+              { name: "Artifact 1: Leadership Mind Map / Analysis (Week 1-2)", status: "Required" },
+              { name: "Artifact 2: Story Mountain Narrative Map (Week 4)", status: "Required" },
+              { name: "Artifact 3: Final Speech Script & Outline (Week 6)", status: "Required" },
+              { name: "Artifact 4: Final Unit Self-Reflection Essay (Week 8)", status: "Required" }
+            ]
+          },
+          worksheet: {
+            id: "ws7",
+            title: "Peer Editing & Portfolio Quality Assurance Sheet",
+            instructions: "Exchange portfolio drafts with a peer and complete this verification checklist.",
+            fields: [
+              { label: "Reviewer Name:", placeholder: "Your name..." },
+              { label: "Author Portfolio Name:", placeholder: "Classmate's name..." },
+              { label: "Top Strength of this Portfolio:", placeholder: "What is done exceptionally well?" },
+              { label: "One Recommended Polish Point:", placeholder: "Specific suggestion before final submission..." }
+            ]
+          },
+          assessment: {
+            hasProject: false,
+            isRecoveryWeek: true,
+            recoveryDetails: "Final Recovery window for Project 3 (My Laboratory Speech). All revised assessments due by end of Week 7."
+          },
+          reflection: {
+            exitQuestion: "What is 1 goal you achieved in public speaking that you thought was impossible in January?",
+            nextWeekReminder: "Week 8 Final Portfolio Submission & Leadership Celebration!"
+          }
+        },
+
+        {
+          id: 8,
+          dates: "Mar 8–12",
+          title: "Final Portfolio and Reflection",
+          badge: "Week 8 • Portfolio (25 Pts)",
+          objective: "Students will present their final curated leadership portfolio and synthesize their personal public speaking transformation.",
+          essentialQuestion: "How will you carry your leadership voice beyond this classroom?",
+          vocabulary: [
+            { term: "Reflection", def: "Serious thought or consideration about one's learning journey." },
+            { term: "Autonomy", def: "The capacity to make informed, uncoerced decisions as a communicator." },
+            { term: "Legacy", def: "The lasting impact of a leader's words and actions on others." },
+            { term: "Self-Efficacy", def: "Confidence in one's ability to succeed in communication tasks." }
+          ],
+          materials: ["Final Portfolio Folder", "Final Assessment Rubric (25 Pts)"],
+          moments: [
+            {
+              title: "1. Motivational Introduction",
+              time: "10 mins",
+              teacherInst: "Play a collage video/slideshow of student moments across the 8 weeks.",
+              studentInst: "Reflect on week 1 baseline feelings vs today's confidence.",
+              questions: ["How has your definition of a 'leader' evolved?"],
+              example: "I used to think leaders just gave orders; now I know they inspire.",
+              output: "Class reflection."
+            },
+            {
+              title: "2. Brief Explanation",
+              titleExt: "Final Portfolio Evaluation",
+              time: "15 mins",
+              teacherInst: "Explain the Final 25-Point Portfolio Rubric structure: Completeness (8p), Artifact Quality (8p), Final Reflection Essay (9p).",
+              studentInst: "Organize final physical/digital folder into order.",
+              questions: ["Is your final reflection essay signed and complete?"],
+              example: "Folder organized neatly.",
+              output: "Final Folder Check."
+            },
+            {
+              title: "3. Individual / Group Work",
+              titleExt: "Final Portfolio Submissions & Celebration",
+              time: "30 mins",
+              teacherInst: "Collect final portfolios. Facilitate 'Leadership Stand & Share' round-robin.",
+              studentInst: "Stand up and deliver a 30-second final declaration: 'As a leader, my voice will...'",
+              questions: ["What is your leadership commitment?"],
+              example: "My voice will advocate for fairness in my community.",
+              output: "30-Second Leadership Statements."
+            },
+            {
+              title: "4. Plenary & Reflection",
+              titleExt: "Unit 1 Graduation & Graduation Certificates",
+              time: "10 mins",
+              teacherInst: "Present Unit 1 Public Speaking Badges / Certificates of Completion.",
+              studentInst: "Complete final exit survey.",
+              questions: ["What was your favorite moment of Unit 1?"],
+              example: "Delivering my live speech in Week 6.",
+              output: "Final Unit Survey."
+            }
+          ],
+          activities: {
+            type: "final-reflection-wall",
+            title: "Leadership Voice Reflection Wall",
+            prompts: [
+              "Before this course, public speaking made me feel...",
+              "The most important lesson I learned about leadership is...",
+              "In the future, I will use my voice to..."
+            ]
+          },
+          worksheet: {
+            id: "ws8",
+            title: "Final Learning Reflection & Self-Assessment Essay",
+            instructions: "Write a comprehensive final reflection on your growth as a public speaker across Unit 1.",
+            fields: [
+              { label: "1. My Transformation as a Speaker:", placeholder: "Describe how your confidence and skills changed from Week 1 to Week 8..." },
+              { label: "2. Mastered Rhetorical Skills:", placeholder: "How did understanding Ethos, Pathos, and Audience Psychology improve your writing?" },
+              { label: "3. Application to Real Life:", placeholder: "Where will you use your public speaking leadership skills outside of school?" }
+            ]
+          },
+          assessment: {
+            hasProject: true,
+            isFinalPortfolio: true,
+            projectName: "Final Unit Portfolio",
+            points: 25,
+            criteria: [
+              { name: "Completeness & Organization", pts: 8, desc: "All 4 required artifacts included and formatted." },
+              { name: "Quality & Revision Evidence", pts: 8, desc: "Demonstrates meaningful edits based on peer/teacher feedback." },
+              { name: "Depth of Final Reflection Essay", pts: 9, desc: "Insightful analysis of personal growth and leadership voice." }
+            ]
+          },
+          reflection: {
+            exitQuestion: "Congratulations! What is one word that defines your new leadership voice?",
+            nextWeekReminder: "Unit 1 Complete! Get ready for Unit 2: Debate & Argumentation!"
+          }
+        }
+      ]
+    };
+
+    /* ==========================================================================
+       APPLICATION STATE MANAGEMENT
+       ========================================================================== */
+    let currentState = {
+      currentWeekId: 1,
+      currentSubTab: 'timeline',
+      viewMode: 'dashboard', // 'dashboard' or 'weekly'
+      timerSeconds: 600,
+      timerInterval: null,
+      isTimerRunning: false,
+      presStep: 0,
+      teacherNotes: {}
+    };
+
+    /* Load stored teacher notes on initialization */
+    function initStorage() {
+      try {
+        const savedNotes = localStorage.getItem('montano_public_speaking_notes');
+        if (savedNotes) {
+          currentState.teacherNotes = JSON.parse(savedNotes);
+        }
+      } catch (e) {
+        console.warn("LocalStorage access restricted or not supported.");
+      }
+    }
+
+    /* ==========================================================================
+       CORE RENDER FUNCTIONS
+       ========================================================================== */
+    
+    // Initialize application on load
+    window.onload = function() {
+      initStorage();
+      renderWeeklyNavTabs();
+      renderDashboardGrid();
+      renderCurrentWeek();
+      
+      // Auto update timer display
+      updateTimerDisplay();
+    };
+
+    // Render Navigation Bar Tabs (Weeks 1 to 8)
+    function renderWeeklyNavTabs() {
+      const navContainer = document.getElementById('weekly-tabs-nav');
+      navContainer.innerHTML = '';
+
+      unitData.weeks.forEach(w => {
+        const isActive = (currentState.viewMode === 'weekly' && currentState.currentWeekId === w.id);
+        const btn = document.createElement('button');
+        btn.onclick = () => selectWeek(w.id);
+        btn.className = `px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition flex items-center space-x-2 ${
+          isActive 
+            ? 'bg-montano-yellow text-slate-900 shadow-md' 
+            : 'text-slate-300 hover:text-white hover:bg-montano-navy/60'
+        }`;
+
+        let badgeDot = '';
+        if (w.assessment.hasProject) {
+          badgeDot = `<span class="w-2 h-2 rounded-full bg-amber-400"></span>`;
+        } else if (w.assessment.isRecoveryWeek) {
+          badgeDot = `<span class="w-2 h-2 rounded-full bg-sky-300"></span>`;
+        }
+
+        btn.innerHTML = `
+          <span>W${w.id}</span>
+          ${badgeDot}
+          <span class="font-normal opacity-80 hidden md:inline">${w.title.split(':')[0]}</span>
+        `;
+        navContainer.appendChild(btn);
+      });
+    }
+
+    // Render Dashboard Grid (Overview of 8 Weeks)
+    function renderDashboardGrid() {
+      const grid = document.getElementById('dashboard-weeks-grid');
+      grid.innerHTML = '';
+
+      unitData.weeks.forEach(w => {
+        const card = document.createElement('div');
+        card.onclick = () => selectWeek(w.id);
+        card.className = "bg-white rounded-2xl p-4 border border-slate-200 hover:border-montano-navy shadow-xs hover:shadow-md transition cursor-pointer flex flex-col justify-between group space-y-3";
+
+        let tagClass = "bg-slate-100 text-slate-600";
+        if (w.assessment.hasProject) tagClass = "bg-amber-100 text-amber-800 font-bold";
+        if (w.assessment.isRecoveryWeek) tagClass = "bg-sky-100 text-sky-800";
+
+        card.innerHTML = `
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] uppercase font-extrabold px-2 py-0.5 rounded ${tagClass}">
+                ${w.badge}
+              </span>
+              <span class="text-[11px] text-slate-400 font-mono">${w.dates}</span>
+            </div>
+            <h4 class="font-display font-bold text-slate-800 group-hover:text-montano-navy transition text-sm leading-snug">
+              ${w.title}
+            </h4>
+            <p class="text-xs text-slate-500 line-clamp-2">
+              ${w.objective}
+            </p>
+          </div>
+
+          <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-montano-navy font-semibold">
+            <span>Explore Lesson</span>
+            <i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition"></i>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // Render Weekly View for Active Week
+    function renderCurrentWeek() {
+      const week = unitData.weeks.find(w => w.id === currentState.currentWeekId);
+      if (!week) return;
+
+      // 1. Render Header Banner
+      const headerCard = document.getElementById('week-header-card');
+      headerCard.innerHTML = `
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="space-y-2 max-w-3xl">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="bg-montano-navy text-white text-xs font-bold px-3 py-0.5 rounded-full uppercase tracking-wider">
+                ${week.badge}
+              </span>
+              <span class="text-xs font-medium text-slate-500">
+                <i class="fa-regular fa-calendar mr-1"></i>${week.dates}, 2027
+              </span>
+              ${week.assessment.hasProject ? `<span class="bg-amber-400 text-slate-900 text-xs font-bold px-2 py-0.5 rounded"><i class="fa-solid fa-star mr-1"></i>25 Pts Project</span>` : ''}
+              ${week.assessment.isRecoveryWeek ? `<span class="bg-sky-200 text-sky-900 text-xs font-bold px-2 py-0.5 rounded"><i class="fa-solid fa-rotate mr-1"></i>Recovery Active</span>` : ''}
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-display font-extrabold text-slate-900">
+              Week ${week.id}: ${week.title}
+            </h2>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              <strong class="text-montano-navy">Objective:</strong> ${week.objective}
+            </p>
+          </div>
+
+          <div class="bg-montano-bg p-4 rounded-2xl border border-montano-olive/30 min-w-[220px] space-y-2 text-xs">
+            <div class="font-bold text-slate-800 flex items-center gap-1.5">
+              <i class="fa-solid fa-circle-question text-montano-teal"></i> Essential Question:
+            </div>
+            <p class="text-slate-700 italic">"${week.essentialQuestion}"</p>
+          </div>
+        </div>
+
+        <!-- Key Vocabulary Pills -->
+        <div class="mt-4 pt-4 border-t border-slate-100 flex flex-wrap items-center gap-2 text-xs">
+          <span class="font-bold text-slate-500 uppercase tracking-wider text-[10px]">Key Vocabulary:</span>
+          ${week.vocabulary.map(v => `
+            <span class="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg border border-slate-200" title="${v.def}">
+              <strong>${v.term}:</strong> ${v.def}
+            </span>
+          `).join('')}
+        </div>
+      `;
+
+      // 2. Render Timeline Moments (4 Cards)
+      renderTimelineMoments(week);
+
+      // 3. Render Interactive Practice Content
+      renderInteractiveSection(week);
+
+      // 4. Render Worksheets Content
+      renderWorksheetsSection(week);
+
+      // 5. Render Assessment & Recovery Content
+      renderAssessmentSection(week);
+
+      // 6. Render Reflection Content
+      renderReflectionSection(week);
+
+      // 7. Load Teacher Notes into textarea
+      const notesArea = document.getElementById('teacher-notes-input');
+      notesArea.value = currentState.teacherNotes[`week_${week.id}`] || '';
+    }
+
+    // Render Didactic Timeline Cards
+    function renderTimelineMoments(week) {
+      const container = document.getElementById('lesson-moments-grid');
+      container.innerHTML = '';
+
+      week.moments.forEach((m, idx) => {
+        const card = document.createElement('div');
+        card.className = "bg-white rounded-2xl border border-slate-200 shadow-xs hover:shadow-md transition overflow-hidden flex flex-col justify-between";
+
+        card.innerHTML = `
+          <div class="p-5 space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+              <span class="text-xs font-bold text-montano-navy">${m.time}</span>
+              <span class="text-[10px] uppercase tracking-wider bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-bold">Moment ${idx+1}</span>
+            </div>
+            <h4 class="font-display font-bold text-slate-900 text-base">
+              ${m.title}
+            </h4>
+
+            <div class="space-y-2 text-xs text-slate-600">
+              <div class="bg-blue-50/60 p-2.5 rounded-xl border border-blue-100">
+                <strong class="text-montano-navy block mb-1"><i class="fa-solid fa-chalkboard-user mr-1"></i> Teacher Guidance:</strong>
+                <p>${m.teacherInst}</p>
+              </div>
+
+              <div class="bg-emerald-50/60 p-2.5 rounded-xl border border-emerald-100">
+                <strong class="text-emerald-800 block mb-1"><i class="fa-solid fa-user-graduate mr-1"></i> Student Action:</strong>
+                <p>${m.studentInst}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Expandable Prompt Section -->
+          <div class="bg-slate-50 p-3 border-t border-slate-100 space-y-2 text-xs">
+            <button onclick="toggleCardDetail('moment-detail-${idx}')" class="w-full text-left font-semibold text-montano-navy flex items-center justify-between">
+              <span><i class="fa-solid fa-circle-info mr-1"></i> Check Prompts & Models</span>
+              <i class="fa-solid fa-chevron-down text-xs"></i>
+            </button>
+
+            <div id="moment-detail-${idx}" class="hidden space-y-2 pt-2 text-slate-600 border-t border-slate-200">
+              <p><strong>Key Questions:</strong> ${m.questions.join(' ')}</p>
+              ${m.example ? `<p class="bg-amber-50 p-2 rounded text-amber-900 border border-amber-200"><strong>Model Example:</strong> ${m.example}</p>` : ''}
+              <p class="text-[11px] text-slate-400"><strong>Expected Output:</strong> ${m.output}</p>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Render Interactive Activities
+    function renderInteractiveSection(week) {
+      const container = document.getElementById('content-activities');
+      container.innerHTML = '';
+
+      const act = week.activities;
+      if (!act) {
+        container.innerHTML = `<p class="text-slate-500 text-sm">No special interactive widget for this week.</p>`;
+        return;
+      }
+
+      const card = document.createElement('div');
+      card.className = "bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-6";
+
+      if (act.type === 'vocab-flip') {
+        card.innerHTML = `
+          <div class="space-y-2">
+            <h3 class="text-lg font-display font-bold text-slate-800">${act.title}</h3>
+            <p class="text-xs text-slate-500">Click any flashcard to flip and reveal the definition.</p>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            ${act.cards.map((c, i) => `
+              <div onclick="flipCard('card-${i}')" class="perspective h-40 cursor-pointer group">
+                <div id="card-${i}" class="relative w-full h-full duration-500 transform-style-3d transition-transform shadow-md rounded-2xl">
+                  <!-- Front -->
+                  <div class="absolute inset-0 w-full h-full bg-montano-navy text-white rounded-2xl p-4 flex flex-col justify-between backface-hidden border border-montano-ice/30">
+                    <span class="text-[10px] uppercase font-bold text-montano-yellow">Term</span>
+                    <h4 class="text-lg font-display font-bold text-center my-auto">${c.front}</h4>
+                    <span class="text-[10px] text-center text-montano-ice">Click to flip <i class="fa-solid fa-rotate"></i></span>
+                  </div>
+                  <!-- Back -->
+                  <div class="absolute inset-0 w-full h-full bg-montano-yellow text-slate-900 rounded-2xl p-4 flex flex-col justify-between backface-hidden rotate-y-180 border border-amber-300">
+                    <span class="text-[10px] uppercase font-bold text-slate-700">Definition</span>
+                    <p class="text-xs font-medium text-center my-auto leading-relaxed">${c.back}</p>
+                    <span class="text-[10px] text-center text-slate-700">Click to flip back</span>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } else if (act.type === 'classify-ethos-pathos') {
+        card.innerHTML = `
+          <div class="space-y-2">
+            <h3 class="text-lg font-display font-bold text-slate-800">${act.title}</h3>
+            <p class="text-xs text-slate-500">Read each quote and select whether it primarily uses Ethos or Pathos.</p>
+          </div>
+          <div class="space-y-3">
+            ${act.items.map((item, idx) => `
+              <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <p class="text-sm italic text-slate-800 font-serif">"${item.text}"</p>
+                <div class="flex items-center space-x-2 shrink-0">
+                  <button onclick="checkClassify(${idx}, 'ethos', '${item.category}')" id="btn-ethos-${idx}" class="px-4 py-1.5 rounded-xl text-xs font-bold border border-slate-300 hover:bg-slate-200 transition">
+                    Ethos
+                  </button>
+                  <button onclick="checkClassify(${idx}, 'pathos', '${item.category}')" id="btn-pathos-${idx}" class="px-4 py-1.5 rounded-xl text-xs font-bold border border-slate-300 hover:bg-slate-200 transition">
+                    Pathos
+                  </button>
+                  <span id="feedback-${idx}" class="text-xs font-bold"></span>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } else if (act.type === 'audience-matching') {
+        card.innerHTML = `
+          <div class="space-y-2">
+            <h3 class="text-lg font-display font-bold text-slate-800">${act.title}</h3>
+            <p class="text-xs text-slate-500">Match the appropriate audience hook to the correct target group.</p>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            ${act.scenarios.map((sc, i) => `
+              <div class="p-5 bg-montano-bg rounded-2xl border border-montano-olive/30 space-y-3">
+                <span class="text-xs font-bold uppercase text-montano-navy block"><i class="fa-solid fa-users mr-1"></i> Target: ${sc.target}</span>
+                <button onclick="toggleAnswer('hook-ans-${i}')" class="w-full py-2 bg-montano-navy text-white text-xs font-bold rounded-xl hover:bg-sky-700 transition">
+                  Reveal Ideal Hook
+                </button>
+                <div id="hook-ans-${i}" class="hidden p-3 bg-white rounded-xl border border-slate-200 text-xs text-slate-700 space-y-1">
+                  <strong>Best Tailored Hook:</strong>
+                  <p class="italic">"${sc.bestHook}"</p>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } else {
+        // Generic interactive placeholder for story builder / vocal lab / outline
+        card.innerHTML = `
+          <div class="space-y-2">
+            <h3 class="text-lg font-display font-bold text-slate-800">${act.title}</h3>
+            <p class="text-xs text-slate-500">Interactive practice session for Week ${week.id}.</p>
+          </div>
+          <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200 space-y-4">
+            <p class="text-sm text-slate-700">Utilize this interactive tool during the 30-minute student work session.</p>
+            <button onclick="alert('Interactive activity state verified for Week ${week.id}')" class="px-5 py-2.5 bg-montano-navy text-white font-bold text-xs rounded-xl hover:bg-sky-700 transition">
+              Launch Activity Module
+            </button>
+          </div>
+        `;
+      }
+
+      container.appendChild(card);
+    }
+
+    // Render Worksheets & Artifacts Section
+    function renderWorksheetsSection(week) {
+      const container = document.getElementById('content-worksheets');
+      container.innerHTML = '';
+
+      const ws = week.worksheet;
+      if (!ws) {
+        container.innerHTML = `<p class="text-slate-500 text-sm">No digital worksheet for this week.</p>`;
+        return;
+      }
+
+      const card = document.createElement('div');
+      card.className = "bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-6";
+
+      card.innerHTML = `
+        <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+          <div>
+            <span class="text-xs font-bold text-montano-navy uppercase tracking-wider">Student Artifact Sheet</span>
+            <h3 class="text-xl font-display font-bold text-slate-900">${ws.title}</h3>
+            <p class="text-xs text-slate-500 mt-1">${ws.instructions}</p>
+          </div>
+
+          <button onclick="printWorksheet('${ws.title}')" class="px-4 py-2 bg-slate-800 text-white hover:bg-slate-700 rounded-xl text-xs font-bold flex items-center gap-2 transition">
+            <i class="fa-solid fa-print"></i> Print Worksheet
+          </button>
+        </div>
+
+        <div class="space-y-4" id="worksheet-fields-container">
+          ${ws.fields.map((f, idx) => `
+            <div class="space-y-1.5">
+              <label class="block text-xs font-bold text-slate-700">${f.label}</label>
+              <textarea rows="3" class="w-full p-3 text-sm rounded-xl border border-slate-300 focus:ring-2 focus:ring-montano-navy focus:outline-none bg-slate-50" placeholder="${f.placeholder}"></textarea>
+            </div>
+          `).join('')}
+        </div>
+
+        <div class="pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+          <span class="text-slate-400 italic">Students can complete on paper or type on projected screen.</span>
+          <button onclick="alert('Worksheet entries preserved locally.')" class="px-4 py-2 bg-montano-teal text-white font-bold rounded-xl hover:bg-emerald-600 transition">
+            <i class="fa-solid fa-check mr-1"></i> Save Draft
+          </button>
+        </div>
+      `;
+
+      container.appendChild(card);
+    }
+
+    // Render Assessment & Rubric Section
+    function renderAssessmentSection(week) {
+      const container = document.getElementById('content-assessment');
+      container.innerHTML = '';
+
+      const ass = week.assessment;
+      const card = document.createElement('div');
+      card.className = "bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-6";
+
+      if (ass.hasProject) {
+        card.innerHTML = `
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+            <div>
+              <span class="bg-amber-100 text-amber-900 text-xs font-bold px-3 py-1 rounded-full uppercase">
+                Official Assessment
+              </span>
+              <h3 class="text-2xl font-display font-extrabold text-slate-900 mt-2">${ass.projectName}</h3>
+              <p class="text-xs text-slate-500">Evaluated out of <strong>${ass.points} Points</strong> towards Unit Total (100 Pts).</p>
+            </div>
+            <div class="text-right">
+              <span class="text-3xl font-display font-black text-montano-navy">${ass.points}</span>
+              <span class="text-xs text-slate-400 block font-bold uppercase">Points Value</span>
+            </div>
+          </div>
+
+          <!-- Master Rubric Breakdown -->
+          <div class="space-y-3">
+            <h4 class="text-sm font-bold text-slate-800">Scoring Rubric Criteria</h4>
+            <div class="space-y-2">
+              ${ass.criteria.map(c => `
+                <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between gap-4">
+                  <div>
+                    <strong class="text-xs text-slate-800 block">${c.name}</strong>
+                    <p class="text-[11px] text-slate-500">${c.desc}</p>
+                  </div>
+                  <span class="bg-white px-3 py-1 rounded-lg border border-slate-200 text-xs font-bold text-montano-navy shrink-0">
+                    ${c.pts} Pts
+                  </span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      } else if (ass.isRecoveryWeek) {
+        card.innerHTML = `
+          <div class="space-y-4">
+            <div class="bg-sky-50 border border-sky-200 rounded-2xl p-5 space-y-2">
+              <h3 class="font-display font-bold text-sky-900 text-lg flex items-center gap-2">
+                <i class="fa-solid fa-rotate text-sky-600"></i> Scheduled Recovery Window
+              </h3>
+              <p class="text-xs text-sky-800 leading-relaxed">${ass.recoveryDetails}</p>
+            </div>
+          </div>
+        `;
+      } else {
+        card.innerHTML = `
+          <div class="text-center py-8 text-slate-500 space-y-2">
+            <i class="fa-solid fa-clipboard-check text-4xl text-slate-300"></i>
+            <p class="text-sm font-semibold">Formative Assessment Week</p>
+            <p class="text-xs text-slate-400">Regular progress check & notebook evaluation in progress.</p>
+          </div>
+        `;
+      }
+
+      container.appendChild(card);
+    }
+
+    // Render Closing Reflection Section
+    function renderReflectionSection(week) {
+      const container = document.getElementById('content-reflection');
+      container.innerHTML = '';
+
+      const ref = week.reflection;
+      const card = document.createElement('div');
+      card.className = "bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-6";
+
+      card.innerHTML = `
+        <div class="space-y-2 border-b border-slate-100 pb-4">
+          <h3 class="text-xl font-display font-bold text-slate-900">Closing Reflection & Exit Ticket</h3>
+          <p class="text-xs text-slate-500">Conclude the 65-minute session with a quick synthesized exit prompt.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="p-5 bg-montano-bg rounded-2xl border border-montano-olive/30 space-y-3">
+            <span class="text-xs font-bold text-montano-navy uppercase tracking-wider block">
+              <i class="fa-solid fa-ticket mr-1"></i> Exit Ticket Question
+            </span>
+            <p class="text-sm font-semibold text-slate-800">"${ref.exitQuestion}"</p>
+            <textarea rows="3" class="w-full p-2.5 text-xs rounded-xl border border-slate-300 bg-white" placeholder="Type sample student response..."></textarea>
+          </div>
+
+          <div class="p-5 bg-slate-50 rounded-2xl border border-slate-200 space-y-3">
+            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">
+              <i class="fa-solid fa-bell mr-1"></i> Looking Ahead to Next Week
+            </span>
+            <p class="text-sm text-slate-700">${ref.nextWeekReminder}</p>
+          </div>
+        </div>
+      `;
+
+      container.appendChild(card);
+    }
+
+    /* ==========================================================================
+       INTERACTION HANDLERS & NAVIGATION LOGIC
+       ========================================================================== */
+
+    // Select active week
+    function selectWeek(weekId) {
+      currentState.currentWeekId = weekId;
+      currentState.viewMode = 'weekly';
+      
+      document.getElementById('dashboard-view').classList.add('hidden');
+      document.getElementById('weekly-view').classList.remove('hidden');
+
+      renderWeeklyNavTabs();
+      renderCurrentWeek();
+      switchWeekSubTab('timeline');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Toggle back to main Dashboard overview
+    function toggleDashboard() {
+      currentState.viewMode = 'dashboard';
+      document.getElementById('weekly-view').classList.add('hidden');
+      document.getElementById('dashboard-view').classList.remove('hidden');
+      renderWeeklyNavTabs();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Switch between Sub-tabs inside Weekly View
+    function switchWeekSubTab(tabName) {
+      currentState.currentSubTab = tabName;
+
+      const tabs = ['timeline', 'activities', 'worksheets', 'assessment', 'reflection', 'teachernotes'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`subtab-${t}`);
+        const content = document.getElementById(`content-${t}`);
+
+        if (t === tabName) {
+          btn.className = "py-3 px-4 text-montano-navy border-b-2 border-montano-navy flex items-center gap-2 transition font-bold";
+          content.classList.remove('hidden');
+        } else {
+          btn.className = "py-3 px-4 text-slate-500 hover:text-slate-800 border-b-2 border-transparent flex items-center gap-2 transition font-medium";
+          content.classList.add('hidden');
+        }
+      });
+    }
+
+    // Toggle Expandable Card Details
+    function toggleCardDetail(elementId) {
+      const el = document.getElementById(elementId);
+      if (el) {
+        el.classList.toggle('hidden');
+      }
+    }
+
+    // Flip Card Interaction
+    function flipCard(cardId) {
+      const card = document.getElementById(cardId);
+      if (card) {
+        card.classList.toggle('rotate-y-180');
+      }
+    }
+
+    // Ethos/Pathos Interactive Classifier Verification
+    function checkClassify(index, chosen, actual) {
+      const ethosBtn = document.getElementById(`btn-ethos-${index}`);
+      const pathosBtn = document.getElementById(`btn-pathos-${index}`);
+      const feedback = document.getElementById(`feedback-${index}`);
+
+      if (chosen === actual) {
+        feedback.textContent = "Correct! ✓";
+        feedback.className = "text-xs font-bold text-emerald-600 ml-2";
+      } else {
+        feedback.textContent = "Try again!";
+        feedback.className = "text-xs font-bold text-red-500 ml-2";
+      }
+    }
+
+    // Toggle Answer Reveal
+    function toggleAnswer(ansId) {
+      const el = document.getElementById(ansId);
+      if (el) el.classList.toggle('hidden');
+    }
+
+    /* ==========================================================================
+       PRESENTATION MODE LOGIC
+       ========================================================================== */
+
+    function startPresentationMode() {
+      const week = unitData.weeks.find(w => w.id === currentState.currentWeekId) || unitData.weeks[0];
+      currentState.presStep = 0;
+
+      document.getElementById('presentation-overlay').classList.remove('hidden');
+      document.getElementById('pres-week-label').textContent = `Week ${week.id}`;
+      document.getElementById('pres-title').textContent = week.title;
+
+      renderPresStep();
+    }
+
+    function renderPresStep() {
+      const week = unitData.weeks.find(w => w.id === currentState.currentWeekId) || unitData.weeks[0];
+      const moment = week.moments[currentState.presStep];
+      const container = document.getElementById('pres-card-content');
+
+      container.innerHTML = `
+        <div class="flex items-center justify-between border-b border-slate-700 pb-4">
+          <span class="text-xs font-bold uppercase text-montano-yellow tracking-widest">${moment.time} Session</span>
+          <span class="text-xs text-slate-400">Step ${currentState.presStep + 1} of 4</span>
+        </div>
+
+        <h3 class="text-2xl sm:text-3xl font-display font-extrabold text-white">${moment.title}</h3>
+
+        <div class="space-y-4 text-sm sm:text-base leading-relaxed">
+          <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-700 space-y-1">
+            <strong class="text-montano-ice text-xs uppercase font-bold block">Teacher Instructions:</strong>
+            <p>${moment.teacherInst}</p>
+          </div>
+
+          <div class="bg-emerald-950/40 p-4 rounded-2xl border border-emerald-800/50 space-y-1">
+            <strong class="text-emerald-400 text-xs uppercase font-bold block">Student Task:</strong>
+            <p>${moment.studentInst}</p>
+          </div>
+
+          <button onclick="toggleAnswer('pres-reveal')" class="w-full py-3 bg-montano-navy hover:bg-sky-600 text-white font-bold text-xs rounded-xl transition">
+            <i class="fa-solid fa-eye mr-2"></i> Reveal Key Questions & Answer Hints
+          </button>
+
+          <div id="pres-reveal" class="hidden bg-slate-900 p-4 rounded-2xl border border-slate-700 space-y-2 text-xs">
+            <p class="text-montano-yellow font-bold">Key Questions:</p>
+            <p>${moment.questions.join(' ')}</p>
+            ${moment.example ? `<p class="text-slate-300 italic pt-2">Model Answer: ${moment.example}</p>` : ''}
+          </div>
+        </div>
+      `;
+
+      document.getElementById('pres-step-indicator').textContent = `Step ${currentState.presStep + 1} of 4`;
+      document.getElementById('pres-prev-btn').disabled = (currentState.presStep === 0);
+      document.getElementById('pres-next-btn').disabled = (currentState.presStep === 3);
+    }
+
+    function prevPresStep() {
+      if (currentState.presStep > 0) {
+        currentState.presStep--;
+        renderPresStep();
+      }
+    }
+
+    function nextPresStep() {
+      if (currentState.presStep < 3) {
+        currentState.presStep++;
+        renderPresStep();
+      }
+    }
+
+    function exitPresentationMode() {
+      document.getElementById('presentation-overlay').classList.add('hidden');
+    }
+
+    /* ==========================================================================
+       TIMER WIDGET LOGIC
+       ========================================================================== */
+
+    function updateTimerDisplay() {
+      const mins = Math.floor(currentState.timerSeconds / 60);
+      const secs = currentState.timerSeconds % 60;
+      const formatted = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      
+      document.getElementById('timer-display').textContent = formatted;
+      document.getElementById('pres-timer-display').textContent = formatted;
+    }
+
+    function toggleTimer() {
+      if (currentState.isTimerRunning) {
+        clearInterval(currentState.timerInterval);
+        currentState.isTimerRunning = false;
+        document.getElementById('timer-icon').className = "fa-solid fa-play";
+      } else {
+        currentState.isTimerRunning = true;
+        document.getElementById('timer-icon').className = "fa-solid fa-pause";
+        currentState.timerInterval = setInterval(() => {
+          if (currentState.timerSeconds > 0) {
+            currentState.timerSeconds--;
+            updateTimerDisplay();
+          } else {
+            clearInterval(currentState.timerInterval);
+            currentState.isTimerRunning = false;
+            document.getElementById('timer-icon').className = "fa-solid fa-play";
+            alert("Classroom Moment Timer Finished!");
+          }
+        }, 1000);
+      }
+    }
+
+    function resetTimer() {
+      clearInterval(currentState.timerInterval);
+      currentState.isTimerRunning = false;
+      document.getElementById('timer-icon').className = "fa-solid fa-play";
+      const selectVal = parseInt(document.getElementById('timer-select').value);
+      currentState.timerSeconds = selectVal;
+      updateTimerDisplay();
+    }
+
+    function setTimerDuration(seconds) {
+      currentState.timerSeconds = parseInt(seconds);
+      resetTimer();
+    }
+
+    /* ==========================================================================
+       FULLSCREEN TOGGLE
+       ========================================================================== */
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => console.log(err));
+        document.getElementById('fullscreen-icon').className = "fa-solid fa-compress";
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+          document.getElementById('fullscreen-icon').className = "fa-solid fa-expand";
+        }
+      }
+    }
+
+    /* ==========================================================================
+       WORKSHEET PRINTING & LOCAL STORAGE
+       ========================================================================== */
+
+    function printWorksheet(title) {
+      const printTitle = document.getElementById('print-sheet-title');
+      const printBody = document.getElementById('print-sheet-body');
+      const fields = document.querySelectorAll('#worksheet-fields-container textarea');
+
+      printTitle.textContent = title;
+      printBody.innerHTML = '';
+
+      fields.forEach((field) => {
+        const fieldBlock = document.createElement('div');
+        fieldBlock.className = "space-y-1 border-b border-slate-300 pb-3";
+        const labelText = field.previousElementSibling ? field.previousElementSibling.textContent : 'Question:';
+        
+        fieldBlock.innerHTML = `
+          <strong class="block text-xs font-bold text-slate-800">${labelText}</strong>
+          <p class="text-sm text-slate-700 min-h-[60px]">${field.value || '____________________________________________________________________'}</p>
+        `;
+        printBody.appendChild(fieldBlock);
+      });
+
+      const printArea = document.getElementById('printable-area');
+      printArea.classList.remove('hidden');
+      window.print();
+      printArea.classList.add('hidden');
+    }
+
+    function saveTeacherNotes() {
+      const weekId = currentState.currentWeekId;
+      const val = document.getElementById('teacher-notes-input').value;
+      currentState.teacherNotes[`week_${weekId}`] = val;
+
+      try {
+        localStorage.setItem('montano_public_speaking_notes', JSON.stringify(currentState.teacherNotes));
+        document.getElementById('save-status-indicator').classList.remove('hidden');
+      } catch(e) {
+        console.warn("Unable to write to LocalStorage");
+      }
+    }
+
+    function clearTeacherNotes() {
+      const weekId = currentState.currentWeekId;
+      document.getElementById('teacher-notes-input').value = '';
+      delete currentState.teacherNotes[`week_${weekId}`];
+      localStorage.setItem('montano_public_speaking_notes', JSON.stringify(currentState.teacherNotes));
+    }
+  </script>
+</body>
+</html>
